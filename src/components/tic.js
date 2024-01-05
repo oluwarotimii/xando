@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
@@ -13,12 +12,13 @@ const initialBoard = Array(9).fill(null);
 const XandO = () => {
   const [board, setBoard] = useState(initialBoard);
   const [isXNext, setIsXNext] = useState(true);
- 
+  const [isSinglePlayer, setIsSinglePlayer] = useState(false);
+
   useEffect(() => {
     checkWinner();
   }, [board]);
 
-  const handleClick = (index: string | number) => {
+  const handleClick = (index) => {
     if (board[index] || checkWinner()) {
       return;
     }
@@ -28,8 +28,28 @@ const XandO = () => {
 
     setBoard(newBoard);
     setIsXNext(!isXNext);
+
+    if (isSinglePlayer && !checkWinner()) {
+      setTimeout(computerMove, 500); // Delay for a more natural feel
+    }
   };
 
+  const computerMove = () => {
+    // Add logic for the computer's move
+    const emptySquares = board.reduce((acc, value, index) => {
+      if (!value) {
+        acc.push(index);
+      }
+      return acc;
+    }, []);
+
+    const randomIndex = Math.floor(Math.random() * emptySquares.length);
+    const computerMoveIndex = emptySquares[randomIndex];
+
+    handleClick(computerMoveIndex);
+  };
+
+ 
   const checkWinner = () => {
     const winPatterns = [
       [0, 1, 2],
@@ -62,12 +82,13 @@ const XandO = () => {
     return false;
   };
 
+
   const resetGame = () => {
     setBoard(initialBoard);
     setIsXNext(true);
   };
 
-  const renderSquare = (index: number) => (
+  const renderSquare = (index) => (
     <TouchableOpacity
       style={styles.square}
       onPress={() => handleClick(index)}
@@ -79,7 +100,9 @@ const XandO = () => {
   return (
     <View style={styles.container}>
       <View style={styles.start}>
-        <Text style={styles.startTxt}> START GAME</Text>
+        <Text style={styles.startTxt} onPress={() => setIsSinglePlayer(!isSinglePlayer)}>
+          {isSinglePlayer ? 'Start 2 Players Game' : 'Start 1 Player Game'}
+        </Text>
       </View>
       <View style={styles.board}>
         <View style={styles.row}>
@@ -106,56 +129,58 @@ const XandO = () => {
 };
 
 const styles = StyleSheet.create({
-      container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: '100%',
-      borderWidth: 2,
-      
-    },
-    start:{
-      width: "50%",
-      // alignSelf: "center",
-      alignItems: "center",
-      marginBottom: '10%',
-      paddingBottom: '10%',
-    },
-    startTxt:{
-      // borderWidth: 1,
-      fontSize: 18,
-      fontWeight: 'bold',
-    },
-    board: {
-      borderWidth: 1,
-      width: "80%",
-      // height: "70%",
-      backgroundColor: '#ddd111',
-    },
-    row: {
-      flexDirection: 'row',
-    },
-    square: {
-      flex: 1,
-      aspectRatio: 1,
-      borderWidth: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: "80%",
-      height: "70%",
-    },
-    squareText: {
-      fontSize: 36,
-    },
-    button: {
-      marginTop: 20,
-      padding: 10,
-      backgroundColor: 'darkblue',
-      borderRadius: 5,
-    },
-    buttonText: {
-      fontSize: 18,
-      color: "white"
-    },
-})
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    borderWidth: 2,
+    
+  },
+  start:{
+    width: "50%",
+    // alignSelf: "center",
+    alignItems: "center",
+    marginBottom: '10%',
+    paddingBottom: '10%',
+  },
+  startTxt:{
+    // borderWidth: 1,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  board: {
+    borderWidth: 1,
+    width: "80%",
+    // height: "70%",
+    backgroundColor: '#ddd111',
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  square: {
+    flex: 1,
+    aspectRatio: 1,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: "80%",
+    height: "70%",
+  },
+  squareText: {
+    fontSize: 36,
+  },
+  button: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: 'darkblue',
+    borderRadius: 5,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: "white"
+  },
+});
+
 export default XandO;
+
