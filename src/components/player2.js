@@ -34,20 +34,7 @@ const XandO = () => {
     }
   };
 
-  const computerMove = () => {
-    // Add logic for the computer's move
-    const emptySquares = board.reduce((acc, value, index) => {
-      if (!value) {
-        acc.push(index);
-      }
-      return acc;
-    }, []);
 
-    const randomIndex = Math.floor(Math.random() * emptySquares.length);
-    const computerMoveIndex = emptySquares[randomIndex];
-
-    handleClick(computerMoveIndex);
-  };
 
  
   const checkWinner = () => {
@@ -100,9 +87,7 @@ const XandO = () => {
   return (
     <View style={styles.container}>
       <View style={styles.start}>
-        <Text style={styles.startTxt} onPress={() => setIsSinglePlayer(!isSinglePlayer)}>
-          {isSinglePlayer ? 'Start 2 Players Game' : 'Start 1 Player Game'}
-        </Text>
+        <Text style={styles.startTxt}> Start Game 2 players</Text>
       </View>
       <View style={styles.board}>
         <View style={styles.row}>
